@@ -48,6 +48,50 @@
       overflow-x: hidden;
     }
 
+    /* ===== RESOURCE ICONS (CSS styled badges) ===== */
+    .res-icon {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .res-icon-vp {
+      background: var(--gold);
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    }
+
+    .res-icon-spice {
+      background: var(--spice);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    }
+
+    .res-icon-solari {
+      background: var(--solari);
+      border-radius: 50%;
+      box-shadow: inset -3px -2px 0 rgba(0,0,0,0.35);
+    }
+
+    .res-icon-water {
+      background: var(--water);
+      border-radius: 50% 50% 50% 0 / 60% 60% 40% 40%;
+      transform: rotate(45deg);
+    }
+
+    .res-icon-persuasion {
+      background: var(--green);
+      clip-path: polygon(50% 0%, 55% 40%, 100% 40%, 62% 63%, 77% 100%, 50% 78%, 23% 100%, 38% 63%, 0% 40%, 45% 40%);
+    }
+
+    .res-icon-sardaukar {
+      background: #8b1a1a;
+      border-radius: 3px;
+      border: 1px solid #c04040;
+    }
+
+    /* Larger icon for quick-stats */
+    .quick-stat .res-icon { width: 14px; height: 14px; }
+
     /* ===== HEADER ===== */
     .header {
       position: sticky;
@@ -128,6 +172,44 @@
     .btn-sm { padding: 7px 13px; font-size: 13px; min-height: 34px; }
     .btn-icon { padding: 8px; min-width: 36px; border-radius: 50%; justify-content: center; }
 
+    /* Big start button */
+    .btn-start-game {
+      background: var(--gold);
+      color: #0a0800;
+      border: none;
+      border-radius: var(--radius);
+      padding: 18px 36px;
+      font-size: 20px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 24px rgba(224, 168, 48, 0.35);
+      transition: all 0.15s;
+    }
+    .btn-start-game:active { opacity: 0.8; transform: scale(0.97); }
+
+    /* End button in round bar */
+    .btn-end-round {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(196, 64, 64, 0.15);
+      border: 1px solid rgba(196, 64, 64, 0.4);
+      border-radius: 50%;
+      color: var(--emperor-light);
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .btn-end-round:active { background: var(--emperor); color: #fff; transform: scale(0.9); }
+
     /* ===== BOTTOM NAV ===== */
     .bottom-nav {
       position: fixed;
@@ -190,6 +272,7 @@
       border-radius: var(--radius);
       padding: 10px 12px;
       border: 1px solid var(--surface3);
+      gap: 8px;
     }
 
     .round-nav-btn {
@@ -205,12 +288,14 @@
       font-size: 16px;
       cursor: pointer;
       transition: all 0.15s;
+      flex-shrink: 0;
     }
 
     .round-nav-btn:active { background: var(--gold); color: var(--bg); transform: scale(0.9); }
 
     .round-center {
       text-align: center;
+      flex: 1;
     }
 
     .round-label {
@@ -311,19 +396,19 @@
     /* Quick stats row (always visible) */
     .quick-stats {
       display: flex;
-      gap: 8px;
+      gap: 6px;
+      flex-wrap: wrap;
     }
 
     .quick-stat {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       background: rgba(0,0,0,0.25);
       border-radius: 8px;
       padding: 5px 8px;
     }
 
-    .quick-stat-icon { font-size: 13px; }
     .quick-stat-value { font-size: 13px; font-weight: 600; }
 
     .expand-indicator {
@@ -359,10 +444,10 @@
 
     .section-label:first-child { margin-top: 0; }
 
-    /* Stat grid */
+    /* Stat grid — 2 columns */
     .stat-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 8px;
     }
 
@@ -382,6 +467,9 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
       font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
 
     .stat-control {
@@ -403,15 +491,18 @@
     .stat-value.spice { color: var(--spice); }
     .stat-value.solari { color: var(--solari); }
     .stat-value.water { color: var(--water); }
+    .stat-value.sardaukar { color: #e05555; }
 
     .stat-btn {
-      width: 32px;
-      height: 32px;
+      min-width: 44px;
+      min-height: 44px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       border: 1px solid var(--surface3);
       background: var(--surface);
       color: var(--text);
-      font-size: 18px;
+      font-size: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -422,21 +513,21 @@
 
     .stat-btn:active { background: var(--gold); color: #0a0800; transform: scale(0.88); border-color: var(--gold); }
 
-    /* Influence */
+    /* Influence — 3 columns, compact */
     .influence-grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
+      gap: 6px;
     }
 
     .influence-item {
       background: var(--surface2);
       border-radius: var(--radius-sm);
-      padding: 8px 6px;
+      padding: 6px 4px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
     }
 
     .influence-name {
@@ -452,13 +543,13 @@
     .influence-control {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
     }
 
     .influence-value {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 800;
-      min-width: 24px;
+      min-width: 20px;
       text-align: center;
       color: var(--sand);
     }
@@ -595,6 +686,13 @@
     .lb-vp { font-size: 20px; font-weight: 800; color: var(--gold); }
 
     /* ===== HISTORY ===== */
+    .history-header {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
     .history-card {
       background: var(--surface);
       border-radius: var(--radius);
@@ -638,6 +736,18 @@
     }
 
     .section-title:first-child { margin-top: 0; }
+
+    .stats-info-line {
+      font-size: 12px;
+      color: var(--text-dim);
+      text-align: center;
+      margin-top: 20px;
+      padding: 12px;
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--surface3);
+      line-height: 1.5;
+    }
 
     /* ===== INPUTS ===== */
     input, select, textarea {
@@ -743,6 +853,39 @@
     .team-section.fremen .team-section-label { color: var(--fremen-light); }
     .team-section.emperor .team-section-label { color: var(--emperor-light); }
 
+    /* End game modal option buttons */
+    .end-option-btn {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 16px;
+      border-radius: 14px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: inherit;
+      cursor: pointer;
+      border: 1px solid;
+      transition: all 0.15s;
+      font-weight: 600;
+    }
+    .end-option-btn:active { opacity: 0.7; transform: scale(0.98); }
+    .end-option-btn.save {
+      background: rgba(77, 184, 106, 0.12);
+      border-color: rgba(77, 184, 106, 0.4);
+      color: var(--green);
+    }
+    .end-option-btn.abandon {
+      background: rgba(196, 64, 64, 0.12);
+      border-color: rgba(196, 64, 64, 0.4);
+      color: var(--emperor-light);
+    }
+    .end-option-btn.cancel {
+      background: transparent;
+      border-color: var(--surface3);
+      color: var(--text-dim);
+    }
+
     /* ===== EMPTY STATE ===== */
     .empty-state {
       display: flex;
@@ -785,7 +928,9 @@
         <div class="empty-icon">🏜️</div>
         <div class="empty-title">No Active Game</div>
         <div class="empty-sub">Start a new game session to begin tracking rounds, scores and conflicts.</div>
-        <button class="btn btn-primary" style="margin-top:12px;" onclick="showNewGameModal()">+ New Game</button>
+        <div style="margin-top:20px;">
+          <button class="btn-start-game" onclick="showNewGameModal()">▶ Start New Game</button>
+        </div>
       </div>
     </div>
     <div id="gameActive" style="display:none;">
@@ -796,6 +941,7 @@
           <div class="round-sublabel" id="roundSub">Tap a player to expand</div>
         </div>
         <div class="round-nav-btn" onclick="changeRound(1)">▶</div>
+        <div class="btn-end-round" onclick="openEndGameSheet()" title="End / Abandon Game">⚑</div>
       </div>
       <div id="playerCards"></div>
     </div>
@@ -865,37 +1011,59 @@
     </div>
   </div>
 
-  <!-- Game Options Modal (End / Delete) -->
-  <div class="modal-overlay" id="gameOptionsModal">
+  <!-- End Game Bottom Sheet -->
+  <div class="modal-overlay" id="endGameSheet">
     <div class="modal">
       <div class="modal-handle"></div>
-      <div class="modal-title">Game Options</div>
+      <div class="modal-title">End Game</div>
       <div style="display:flex;flex-direction:column;gap:10px;">
-        <button class="btn btn-primary" style="padding:14px;font-size:15px;border-radius:12px;" onclick="closeModal('gameOptionsModal');confirmEndGame()">
-          ✅ End &amp; Save to History
+        <button class="end-option-btn save" onclick="closeModal('endGameSheet');confirmEndGame()">
+          ✅ Save &amp; End
         </button>
-        <button class="btn btn-danger" style="padding:14px;font-size:15px;border-radius:12px;" onclick="closeModal('gameOptionsModal');showDeleteCurrentModal()">
-          🗑 Abandon &amp; Delete Game
+        <button class="end-option-btn abandon" onclick="closeModal('endGameSheet');showAbandonConfirm()">
+          🗑 Abandon
         </button>
-        <button class="btn btn-ghost" style="padding:14px;font-size:15px;border-radius:12px;" onclick="closeModal('gameOptionsModal')">
+        <button class="end-option-btn cancel" onclick="closeModal('endGameSheet')">
           Cancel
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Delete Current Game Confirmation -->
-  <div class="modal-overlay" id="deleteCurrentModal">
+  <!-- Abandon Confirmation (second confirmation) -->
+  <div class="modal-overlay" id="abandonConfirmModal">
     <div class="modal">
       <div class="modal-handle"></div>
       <div class="modal-title" style="color:var(--emperor-light);">Abandon Game?</div>
       <div class="modal-body">This will permanently delete the current game in progress. All round data will be lost and nothing will be saved to history.</div>
       <div class="modal-actions">
-        <button class="btn" onclick="closeModal('deleteCurrentModal')">Keep Playing</button>
+        <button class="btn" onclick="closeModal('abandonConfirmModal')">Keep Playing</button>
         <button class="btn btn-danger" onclick="abandonCurrentGame()">Yes, Abandon</button>
       </div>
     </div>
   </div>
+
+  <!-- Game Options Modal (End / Delete) — kept for Scores tab button -->
+  <div class="modal-overlay" id="gameOptionsModal">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Game Options</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <button class="end-option-btn save" onclick="closeModal('gameOptionsModal');confirmEndGame()">
+          ✅ End &amp; Save to History
+        </button>
+        <button class="end-option-btn abandon" onclick="closeModal('gameOptionsModal');showAbandonConfirm()">
+          🗑 Abandon &amp; Delete Game
+        </button>
+        <button class="end-option-btn cancel" onclick="closeModal('gameOptionsModal')">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden file input for import -->
+  <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importHistory(event)">
 
 <script>
 // ========== DATA ==========
@@ -989,7 +1157,8 @@ function showNewGameModal() {
   openModal('newGameModal');
 }
 
-function showDeleteCurrentModal() { openModal('deleteCurrentModal'); }
+function openEndGameSheet() { openModal('endGameSheet'); }
+function showAbandonConfirm() { openModal('abandonConfirmModal'); }
 
 // ========== GAME LIFECYCLE ==========
 function startGame() {
@@ -1053,6 +1222,11 @@ function changeRound(delta) {
 // Preserve expanded state across re-renders
 let expandedCards = new Set();
 
+// Resource icon HTML helpers
+function resIcon(type) {
+  return `<span class="res-icon res-icon-${type}"></span>`;
+}
+
 function renderRound() {
   document.getElementById('roundLabel').textContent = 'Round ' + currentRound;
   document.getElementById('roundSub').textContent = currentGame.players.length + ' players · tap to expand';
@@ -1081,34 +1255,35 @@ function renderRound() {
           </div>
           <div class="quick-stats">
             <div class="quick-stat">
-              <span class="quick-stat-icon">🌶️</span>
+              ${resIcon('spice')}
               <span class="quick-stat-value" style="color:var(--spice)">${d.spice}</span>
             </div>
             <div class="quick-stat">
-              <span class="quick-stat-icon">💰</span>
+              ${resIcon('solari')}
               <span class="quick-stat-value" style="color:var(--solari)">${d.solari}</span>
             </div>
             <div class="quick-stat">
-              <span class="quick-stat-icon">💧</span>
+              ${resIcon('water')}
               <span class="quick-stat-value" style="color:var(--water)">${d.water}</span>
             </div>
             <div class="quick-stat">
-              <span class="quick-stat-icon">🗡️</span>
+              ${resIcon('persuasion')}
               <span class="quick-stat-value" style="color:var(--green)">${d.persuasion}</span>
             </div>
-            ${d.conflictWon ? `<div class="quick-stat"><span class="quick-stat-icon">⚔️</span><span class="quick-stat-value" style="color:var(--gold)">W</span></div>` : ''}
+            ${d.sardaukar > 0 ? `<div class="quick-stat">${resIcon('sardaukar')}<span class="quick-stat-value" style="color:#e05555">${d.sardaukar}</span></div>` : ''}
+            ${d.conflictWon ? `<div class="quick-stat"><span style="font-size:13px;">⚔</span><span class="quick-stat-value" style="color:var(--gold)">W</span></div>` : ''}
           </div>
           <div class="expand-indicator">▼</div>
         </div>
         <div class="player-card-body">
           <div class="section-label">Resources &amp; Points</div>
           <div class="stat-grid">
-            ${statItem('Victory Points', 'vp', d.vp, p.id, 'vp')}
-            ${statItem('Persuasion', 'persuasion', d.persuasion, p.id, 'persuasion')}
-            ${statItem('Spice 🌶️', 'spice', d.spice, p.id, 'spice')}
-            ${statItem('Solari 💰', 'solari', d.solari, p.id, 'solari')}
-            ${statItem('Water 💧', 'water', d.water, p.id, 'water')}
-            ${statItem('Sardaukar', 'sardaukar', d.sardaukar, p.id, '')}
+            ${statItem('Victory Points', 'vp', d.vp, p.id, 'vp', 'vp')}
+            ${statItem('Persuasion ⚔', 'persuasion', d.persuasion, p.id, 'persuasion', 'persuasion')}
+            ${statItem('Spice', 'spice', d.spice, p.id, 'spice', 'spice')}
+            ${statItem('Solari', 'solari', d.solari, p.id, 'solari', 'solari')}
+            ${statItem('Water', 'water', d.water, p.id, 'water', 'water')}
+            ${statItem('Sardaukar', 'sardaukar', d.sardaukar, p.id, '', 'sardaukar')}
           </div>
 
           <div class="section-label">Faction Influence</div>
@@ -1139,10 +1314,11 @@ function renderRound() {
   }).join('');
 }
 
-function statItem(label, key, value, playerId, colorClass) {
+function statItem(label, key, value, playerId, colorClass, iconType) {
+  const icon = iconType ? `${resIcon(iconType)} ` : '';
   return `
     <div class="stat-item">
-      <div class="stat-item-label">${label}</div>
+      <div class="stat-item-label">${icon}${label}</div>
       <div class="stat-control">
         <div class="stat-btn" onclick="changeStat('${playerId}','${key}',-1)">−</div>
         <div class="stat-value ${colorClass}">${value}</div>
@@ -1215,7 +1391,7 @@ function confirmEndGame() {
 }
 
 function abandonCurrentGame() {
-  closeModal('deleteCurrentModal');
+  closeModal('abandonConfirmModal');
   clearCurrentGame();
   switchTab('history');
 }
@@ -1287,8 +1463,16 @@ function renderScoreboard() {
 // ========== HISTORY ==========
 function renderHistory() {
   const container = document.getElementById('historyContent');
+
+  const headerHtml = `
+    <div class="history-header">
+      <button class="btn btn-primary btn-sm" onclick="exportHistory()">⬇ Export JSON</button>
+      <button class="btn btn-sm" onclick="document.getElementById('importFileInput').click()">⬆ Import</button>
+    </div>
+  `;
+
   if (gameHistory.length === 0) {
-    container.innerHTML = `
+    container.innerHTML = headerHtml + `
       <div class="empty-state">
         <div class="empty-icon">📜</div>
         <div class="empty-title">No Games Yet</div>
@@ -1298,7 +1482,7 @@ function renderHistory() {
     return;
   }
 
-  container.innerHTML = gameHistory.map((g, gi) => `
+  const cards = gameHistory.map((g, gi) => `
     <div class="history-card">
       <div class="history-card-top">
         <div>
@@ -1315,6 +1499,51 @@ function renderHistory() {
       </div>
     </div>
   `).join('');
+
+  container.innerHTML = headerHtml + cards;
+}
+
+function exportHistory() {
+  const blob = new Blob([JSON.stringify(gameHistory, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'dune-history.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importHistory(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!Array.isArray(imported)) { alert('Invalid file: expected a JSON array.'); return; }
+      // Merge: avoid duplicates by date+winner combo
+      const existing = new Set(gameHistory.map(g => g.date + '|' + g.winner + '|' + g.totalRounds));
+      let added = 0;
+      imported.forEach(g => {
+        const key = g.date + '|' + g.winner + '|' + g.totalRounds;
+        if (!existing.has(key)) {
+          gameHistory.push(g);
+          added++;
+        }
+      });
+      // Sort by date descending
+      gameHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
+      localStorage.setItem('duneHistory', JSON.stringify(gameHistory));
+      renderHistory();
+      renderStats();
+      alert(`Import complete. ${added} new game(s) added.`);
+    } catch(err) {
+      alert('Failed to parse JSON file.');
+    }
+  };
+  reader.readAsText(file);
+  // Reset so the same file can be imported again if needed
+  event.target.value = '';
 }
 
 function formatDate(str) {
@@ -1335,7 +1564,14 @@ function deleteGame(index) {
 function renderStats() {
   const container = document.getElementById('statsContent');
   if (gameHistory.length === 0) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-title">No Stats Yet</div><div class="empty-sub">Play some games first!</div></div>`;
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📊</div>
+        <div class="empty-title">No Stats Yet</div>
+        <div class="empty-sub">Play some games first!</div>
+      </div>
+      <div class="stats-info-line">Stats are stored in your browser. Export history from the History tab to back up your data.</div>
+    `;
     return;
   }
 
@@ -1389,6 +1625,7 @@ function renderStats() {
         `;
       }).join('')}
     </div>
+    <div class="stats-info-line">Stats are stored in your browser. Export history from the History tab to back up your data.</div>
   `;
 }
 
