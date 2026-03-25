@@ -67,9 +67,9 @@
     }
 
     .res-icon-solari {
-      background: var(--solari);
+      background: radial-gradient(circle at 38% 35%, #e8e8e8 0%, #b0b0b0 55%, #787878 100%);
       border-radius: 50%;
-      box-shadow: inset -3px -2px 0 rgba(0,0,0,0.35);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.4);
     }
 
     .res-icon-water {
@@ -78,15 +78,48 @@
       transform: rotate(45deg);
     }
 
+    /* Persuasion = blue rounded square (matches actual game token) */
     .res-icon-persuasion {
-      background: var(--green);
-      clip-path: polygon(50% 0%, 55% 40%, 100% 40%, 62% 63%, 77% 100%, 50% 78%, 23% 100%, 38% 63%, 0% 40%, 45% 40%);
+      background: linear-gradient(135deg, #5ab8f0 0%, #2478b0 100%);
+      clip-path: none;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.25);
     }
 
     .res-icon-sardaukar {
       background: #8b1a1a;
       border-radius: 3px;
       border: 1px solid #c04040;
+    }
+
+    /* Combat Strength = red diagonal sword matching game icon */
+    .res-icon-combat {
+      background: transparent;
+      position: relative;
+      overflow: visible;
+    }
+    .res-icon-combat::before {
+      content: '';
+      position: absolute;
+      /* blade: thin rotated rectangle */
+      width: 5px;
+      height: 15px;
+      background: linear-gradient(180deg, #ff4444 0%, #cc1111 100%);
+      border-radius: 2px 2px 0 0;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      box-shadow: 0 0 4px rgba(200,20,20,0.7);
+    }
+    .res-icon-combat::after {
+      content: '';
+      position: absolute;
+      /* crossguard */
+      width: 12px;
+      height: 3px;
+      background: #cc1111;
+      border-radius: 1px;
+      top: 58%; left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
     }
 
     /* Larger icon for quick-stats */
@@ -487,11 +520,12 @@
     }
 
     .stat-value.vp { color: var(--gold); }
-    .stat-value.persuasion { color: var(--green); }
+    .stat-value.persuasion { color: #5ab8f0; }
     .stat-value.spice { color: var(--spice); }
-    .stat-value.solari { color: var(--solari); }
+    .stat-value.solari { color: #c8c8c8; }
     .stat-value.water { color: var(--water); }
     .stat-value.sardaukar { color: #e05555; }
+    .stat-value.combat { color: #e08840; }
 
     .stat-btn {
       min-width: 44px;
@@ -1200,7 +1234,7 @@ function initRound(round) {
       currentGame.rounds[round][p.id] = {
         vp: round > 1 ? (currentGame.rounds[round - 1][p.id]?.vp || 0) : 0,
         spice: 0, solari: 0, water: 0, persuasion: 0,
-        conflictWon: false, sardaukar: 0, influence: {}, notes: ''
+        conflictWon: false, combatStrength: 0, sardaukar: 0, influence: {}, notes: ''
       };
       FACTIONS.forEach(f => {
         currentGame.rounds[round][p.id].influence[f] =
@@ -1270,6 +1304,7 @@ function renderRound() {
               ${resIcon('persuasion')}
               <span class="quick-stat-value" style="color:var(--green)">${d.persuasion}</span>
             </div>
+            ${d.combatStrength > 0 ? `<div class="quick-stat">${resIcon('combat')}<span class="quick-stat-value" style="color:#ff4444">${d.combatStrength}</span></div>` : ''}
             ${d.sardaukar > 0 ? `<div class="quick-stat">${resIcon('sardaukar')}<span class="quick-stat-value" style="color:#e05555">${d.sardaukar}</span></div>` : ''}
             ${d.conflictWon ? `<div class="quick-stat"><span style="font-size:13px;">⚔</span><span class="quick-stat-value" style="color:var(--gold)">W</span></div>` : ''}
           </div>
@@ -1283,6 +1318,7 @@ function renderRound() {
             ${statItem('Spice', 'spice', d.spice, p.id, 'spice', 'spice')}
             ${statItem('Solari', 'solari', d.solari, p.id, 'solari', 'solari')}
             ${statItem('Water', 'water', d.water, p.id, 'water', 'water')}
+            ${statItem('Combat Str.', 'combatStrength', d.combatStrength, p.id, 'combat', 'combat')}
             ${statItem('Sardaukar', 'sardaukar', d.sardaukar, p.id, '', 'sardaukar')}
           </div>
 
