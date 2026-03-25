@@ -78,12 +78,47 @@
       transform: rotate(45deg);
     }
 
-    /* Persuasion = blue rounded square (matches actual game token) */
-    .res-icon-persuasion {
-      background: linear-gradient(135deg, #5ab8f0 0%, #2478b0 100%);
-      clip-path: none;
-      border-radius: 4px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.25);
+    /* Persuasion = blue diamond badge (rotated square with value inside) */
+    .res-icon-persuasion { display: none; } /* replaced by persuasion-diamond */
+
+    .persuasion-diamond-wrap {
+      position: relative;
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+    }
+
+    .persuasion-diamond-wrap.large {
+      width: 48px;
+      height: 48px;
+    }
+
+    .persuasion-diamond {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #68c8ff 0%, #1a6aaa 100%);
+      border-radius: 5px;
+      transform: rotate(45deg);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.55), inset 0 1px 2px rgba(255,255,255,0.3);
+      border: 1px solid rgba(120,200,255,0.4);
+    }
+
+    .persuasion-diamond-val {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 14px;
+      line-height: 1;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+      z-index: 1;
+    }
+
+    .persuasion-diamond-wrap.large .persuasion-diamond-val {
+      font-size: 20px;
     }
 
     .res-icon-sardaukar {
@@ -1261,6 +1296,13 @@ function resIcon(type) {
   return `<span class="res-icon res-icon-${type}"></span>`;
 }
 
+function persuasionDiamond(value, large = false) {
+  return `<div class="persuasion-diamond-wrap${large ? ' large' : ''}">
+    <div class="persuasion-diamond"></div>
+    <div class="persuasion-diamond-val">${value}</div>
+  </div>`;
+}
+
 function renderRound() {
   document.getElementById('roundLabel').textContent = 'Round ' + currentRound;
   document.getElementById('roundSub').textContent = currentGame.players.length + ' players · tap to expand';
@@ -1301,8 +1343,7 @@ function renderRound() {
               <span class="quick-stat-value" style="color:var(--water)">${d.water}</span>
             </div>
             <div class="quick-stat">
-              ${resIcon('persuasion')}
-              <span class="quick-stat-value" style="color:var(--green)">${d.persuasion}</span>
+              ${persuasionDiamond(d.persuasion)}
             </div>
             ${d.combatStrength > 0 ? `<div class="quick-stat">${resIcon('combat')}<span class="quick-stat-value" style="color:#ff4444">${d.combatStrength}</span></div>` : ''}
             ${d.sardaukar > 0 ? `<div class="quick-stat">${resIcon('sardaukar')}<span class="quick-stat-value" style="color:#e05555">${d.sardaukar}</span></div>` : ''}
@@ -1314,7 +1355,14 @@ function renderRound() {
           <div class="section-label">Resources &amp; Points</div>
           <div class="stat-grid">
             ${statItem('Victory Points', 'vp', d.vp, p.id, 'vp', 'vp')}
-            ${statItem('Persuasion ⚔', 'persuasion', d.persuasion, p.id, 'persuasion', 'persuasion')}
+            <div class="stat-item">
+              <div class="stat-item-label">Persuasion</div>
+              <div class="stat-control" style="gap:8px;">
+                <div class="stat-btn" onclick="changeStat('${p.id}','persuasion',-1)">−</div>
+                ${persuasionDiamond(d.persuasion, true)}
+                <div class="stat-btn" onclick="changeStat('${p.id}','persuasion',1)">+</div>
+              </div>
+            </div>
             ${statItem('Spice', 'spice', d.spice, p.id, 'spice', 'spice')}
             ${statItem('Solari', 'solari', d.solari, p.id, 'solari', 'solari')}
             ${statItem('Water', 'water', d.water, p.id, 'water', 'water')}
