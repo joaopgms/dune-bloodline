@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Dune Bloodline Tracker</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    :root {
+      --bg: #1a1511;
+      --surface: #2a2118;
+      --surface2: #3a3028;
+      --sand: #c4956a;
+      --gold: #d4a54a;
+      --text: #e8dcc8;
+      --muted: #8a7a6a;
+      --fremen: #4a8fb8;
+      --fremen-bg: #1a2a35;
+      --emperor: #b84a4a;
+      --emperor-bg: #351a1a;
+      --green: #5ab85a;
+      --spice: #e8832a;
+      --solari: #d4c44a;
+      --water: #4a9ad4;
+      --radius: 12px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: linear-gradient(135deg, var(--surface) 0%, #1e1814 100%);
+      border-bottom: 1px solid var(--sand);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header h1 {
+      font-size: 18px;
+      color: var(--gold);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .header-actions { display: flex; gap: 8px; }
+
+    .btn {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--sand);
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn:active { transform: scale(0.95); }
+    .btn-primary { background: var(--gold); color: var(--bg); border-color: var(--gold); font-weight: 600; }
+    .btn-sm { padding: 6px 10px; font-size: 12px; }
+    .btn-danger { border-color: var(--emperor); color: var(--emperor); }
+
+    /* Navigation tabs */
+    .tabs {
+      display: flex;
+      background: var(--surface);
+      border-bottom: 1px solid var(--surface2);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tab {
+      flex: 1;
+      min-width: fit-content;
+      padding: 10px 16px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    /* Screens */
+    .screen { display: none; padding: 16px; padding-bottom: 80px; }
+    .screen.active { display: block; }
+
+    /* Setup Screen */
+    .setup-section {
+      margin-bottom: 24px;
+    }
+
+    .setup-section h2 {
+      font-size: 16px;
+      color: var(--sand);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .team-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 12px;
+      border-left: 4px solid;
+    }
+
+    .team-card.fremen { border-left-color: var(--fremen); background: var(--fremen-bg); }
+    .team-card.emperor { border-left-color: var(--emperor); background: var(--emperor-bg); }
+
+    .team-label {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .team-card.fremen .team-label { color: var(--fremen); }
+    .team-card.emperor .team-label { color: var(--emperor); }
+
+    .player-input {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+
+    .player-input label {
+      font-size: 12px;
+      color: var(--muted);
+      min-width: 20px;
+    }
+
+    input, select {
+      background: var(--surface2);
+      border: 1px solid var(--muted);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      width: 100%;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    input::placeholder { color: var(--muted); }
+
+    select { appearance: none; cursor: pointer; }
+
+    /* Game Screen */
+    .round-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding: 12px 16px;
+      background: var(--surface);
+      border-radius: var(--radius);
+    }
+
+    .round-header h2 {
+      font-size: 20px;
+      color: var(--gold);
+    }
+
+    .round-nav { display: flex; gap: 8px; }
+
+    .player-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+      border: 1px solid var(--surface2);
+    }
+
+    .player-card-header {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .player-card.fremen .player-card-header { background: var(--fremen-bg); }
+    .player-card.emperor .player-card-header { background: var(--emperor-bg); }
+
+    .player-name {
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .player-leader {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .player-vp {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .player-card-body {
+      padding: 12px 16px;
+      display: none;
+    }
+
+    .player-card.expanded .player-card-body { display: block; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat-item {
+      background: var(--surface2);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .stat-control {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      min-width: 32px;
+      text-align: center;
+    }
+
+    .stat-value.spice { color: var(--spice); }
+    .stat-value.solari { color: var(--solari); }
+    .stat-value.water { color: var(--water); }
+    .stat-value.persuasion { color: var(--green); }
+    .stat-value.vp { color: var(--gold); }
+
+    .stat-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--muted);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .stat-btn:active { transform: scale(0.9); background: var(--gold); color: var(--bg); }
+
+    /* Influence section */
+    .influence-section {
+      margin-top: 12px;
+    }
+
+    .influence-section h4 {
+      font-size: 12px;
+      color: var(--sand);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .influence-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .influence-item {
+      background: var(--surface2);
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .influence-name {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    /* Conflicts section */
+    .conflict-section {
+      margin-top: 12px;
+    }
+
+    .conflict-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface2);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .toggle {
+      width: 48px;
+      height: 28px;
+      border-radius: 14px;
+      background: var(--muted);
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .toggle.on { background: var(--green); }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: white;
+      transition: transform 0.2s;
+    }
+
+    .toggle.on::after { transform: translateX(20px); }
+
+    .conflict-label { font-size: 14px; }
+
+    /* History Screen */
+    .game-history-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--surface2);
+    }
+
+    .game-date {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .game-winner {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .game-scores {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .score-chip {
+      background: var(--surface2);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    .score-chip.fremen { border: 1px solid var(--fremen); }
+    .score-chip.emperor { border: 1px solid var(--emperor); }
+
+    /* Stats Screen */
+    .leaderboard {
+      background: var(--surface);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .leaderboard-row {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--surface2);
+    }
+
+    .leaderboard-rank {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold);
+      min-width: 36px;
+    }
+
+    .leaderboard-name {
+      flex: 1;
+      font-weight: 500;
+    }
+
+    .leaderboard-stat {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 200;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 16px 16px 0 0;
+      padding: 24px 16px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal h3 {
+      color: var(--gold);
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .modal-actions .btn { flex: 1; }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+
+    .empty-state h3 { color: var(--sand); margin-bottom: 8px; }
+
+    /* Leader select styling */
+    .leader-select-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .leader-select-group input { flex: 1; }
+    .leader-select-group select { flex: 1; }
+
+    /* Sardaukar */
+    .full-width { grid-column: 1 / -1; }
+
+    .notes-input {
+      margin-top: 12px;
+      width: 100%;
+    }
+
+    .notes-input textarea {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--muted);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .notes-input textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Dune Bloodline</h1>
+    <div class="header-actions">
+      <button class="btn btn-sm" onclick="showScreen('history')">History</button>
+      <button class="btn btn-sm btn-primary" id="newGameBtn" onclick="showNewGameModal()">+ Game</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs" id="gameTabs" style="display:none;">
+    <div class="tab active" data-tab="game" onclick="switchTab('game')">Tracker</div>
+    <div class="tab" data-tab="scoreboard" onclick="switchTab('scoreboard')">Scores</div>
+    <div class="tab" data-tab="history" onclick="switchTab('history')">History</div>
+    <div class="tab" data-tab="stats" onclick="switchTab('stats')">Stats</div>
+  </div>
+
+  <!-- Game Tracker Screen -->
+  <div class="screen" id="screen-game">
+    <div class="round-header">
+      <div class="round-nav">
+        <button class="btn btn-sm" onclick="changeRound(-1)">&#9664;</button>
+      </div>
+      <h2 id="roundLabel">Round 1</h2>
+      <div class="round-nav">
+        <button class="btn btn-sm" onclick="changeRound(1)">&#9654;</button>
+        <button class="btn btn-sm btn-primary" onclick="endGame()">End Game</button>
+      </div>
+    </div>
+
+    <div id="playerCards"></div>
+  </div>
+
+  <!-- Scoreboard Screen -->
+  <div class="screen" id="screen-scoreboard">
+    <div id="scoreboardContent"></div>
+  </div>
+
+  <!-- History Screen -->
+  <div class="screen" id="screen-history">
+    <div id="historyContent"></div>
+  </div>
+
+  <!-- Stats Screen -->
+  <div class="screen" id="screen-stats">
+    <div id="statsContent"></div>
+  </div>
+
+  <!-- New Game Modal -->
+  <div class="modal-overlay" id="newGameModal">
+    <div class="modal">
+      <h3>New Game Session</h3>
+
+      <div class="setup-section">
+        <label style="font-size:13px;color:var(--muted);display:block;margin-bottom:8px;">Game Date</label>
+        <input type="date" id="gameDate">
+      </div>
+
+      <div class="setup-section">
+        <div class="team-card fremen">
+          <div class="team-label">Team Fremen</div>
+          <div class="player-input">
+            <label>1</label>
+            <div class="leader-select-group">
+              <input type="text" id="f1name" placeholder="Player name">
+              <select id="f1leader">
+                <option value="">Leader...</option>
+              </select>
+            </div>
+          </div>
+          <div class="player-input">
+            <label>2</label>
+            <div class="leader-select-group">
+              <input type="text" id="f2name" placeholder="Player name">
+              <select id="f2leader">
+                <option value="">Leader...</option>
+              </select>
+            </div>
+          </div>
+          <div class="player-input">
+            <label>3</label>
+            <div class="leader-select-group">
+              <input type="text" id="f3name" placeholder="Player name">
+              <select id="f3leader">
+                <option value="">Leader...</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-card emperor">
+          <div class="team-label">Team Emperor</div>
+          <div class="player-input">
+            <label>4</label>
+            <div class="leader-select-group">
+              <input type="text" id="e1name" placeholder="Player name">
+              <select id="e1leader">
+                <option value="">Leader...</option>
+              </select>
+            </div>
+          </div>
+          <div class="player-input">
+            <label>5</label>
+            <div class="leader-select-group">
+              <input type="text" id="e2name" placeholder="Player name">
+              <select id="e2leader">
+                <option value="">Leader...</option>
+              </select>
+            </div>
+          </div>
+          <div class="player-input">
+            <label>6</label>
+            <div class="leader-select-group">
+              <input type="text" id="e3name" placeholder="Player name">
+              <select id="e3leader">
+                <option value="">Leader...</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn" onclick="closeNewGameModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="startGame()">Start Game</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- End Game Modal -->
+  <div class="modal-overlay" id="endGameModal">
+    <div class="modal">
+      <h3>End Game</h3>
+      <p style="color:var(--muted);margin-bottom:16px;">Save this game to history? You can review final scores on the Scores tab first.</p>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeEndGameModal()">Cancel</button>
+        <button class="btn btn-danger" onclick="confirmEndGame()">End & Save</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+// ========== DATA ==========
+const LEADERS = [
+  // Base game + Uprising + Bloodlines leaders
+  'Paul Atreides', 'Duke Leto Atreides', 'Jessica of Arrakis',
+  'Baron Vladimir Harkonnen', 'Glossu "Beast" Rabban', 'Feyd-Rautha Harkonnen',
+  'Count Ilban Richese', 'Helena Richese',
+  'Princess Yuna Moritani', 'Hundro Moritani',
+  'Countess Ariana Thorvald', 'Earl Rhombur Vernius',
+  'Tessia Vernius', 'Prince Rhombur Vernius',
+  'Archduke Armand Ecaz', 'Ilesa Ecaz',
+  'Leto Atreides II', 'Alia Atreides',
+  'Stilgar', 'Chani',
+  'Irulan Corrino', 'Shaddam Corrino IV',
+  'Margot Fenring', 'Count Hasimir Fenring',
+  'Reverend Mother Mohiam',
+  'Liet Kynes', 'Gurney Halleck', 'Thufir Hawat',
+  'Duncan Idaho', 'Dr. Wellington Yueh',
+  'Whitmore Bludd', 'Staban Tuek'
+];
+
+const FACTIONS = ['Emperor', 'Spacing Guild', 'Bene Gesserit', 'Fremen', 'Great Houses', 'Fringe Worlds'];
+
+let currentGame = null;
+let currentRound = 1;
+let gameHistory = JSON.parse(localStorage.getItem('duneHistory') || '[]');
+
+// ========== INIT ==========
+function init() {
+  populateLeaderSelects();
+  document.getElementById('gameDate').value = new Date().toISOString().split('T')[0];
+
+  // Restore in-progress game
+  const saved = localStorage.getItem('duneCurrentGame');
+  if (saved) {
+    currentGame = JSON.parse(saved);
+    currentRound = parseInt(localStorage.getItem('duneCurrentRound') || '1');
+    showGameUI();
+  } else {
+    showScreen('history');
+    renderHistory();
+    renderStats();
+  }
+}
+
+function populateLeaderSelects() {
+  const selects = document.querySelectorAll('select[id$="leader"]');
+  selects.forEach(sel => {
+    LEADERS.sort().forEach(l => {
+      const opt = document.createElement('option');
+      opt.value = l;
+      opt.textContent = l;
+      sel.appendChild(opt);
+    });
+  });
+}
+
+// ========== NAVIGATION ==========
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  const screen = document.getElementById('screen-' + name);
+  if (screen) screen.classList.add('active');
+  const tab = document.querySelector(`.tab[data-tab="${name}"]`);
+  if (tab) tab.classList.add('active');
+}
+
+function switchTab(name) {
+  showScreen(name);
+  if (name === 'scoreboard') renderScoreboard();
+  if (name === 'history') renderHistory();
+  if (name === 'stats') renderStats();
+}
+
+// ========== NEW GAME ==========
+function showNewGameModal() {
+  document.getElementById('newGameModal').classList.add('active');
+  // Pre-fill names from last game
+  if (gameHistory.length > 0) {
+    const last = gameHistory[0];
+    last.players.forEach((p, i) => {
+      const team = p.team === 'fremen' ? 'f' : 'e';
+      const idx = p.team === 'fremen' ? (i + 1) : (i - 2);
+      const nameInput = document.getElementById(team + idx + 'name');
+      if (nameInput) nameInput.value = p.name;
+    });
+  }
+}
+
+function closeNewGameModal() {
+  document.getElementById('newGameModal').classList.remove('active');
+}
+
+function startGame() {
+  const players = [];
+
+  for (let i = 1; i <= 3; i++) {
+    const name = document.getElementById('f' + i + 'name').value.trim();
+    const leader = document.getElementById('f' + i + 'leader').value;
+    if (!name) { alert('Please fill all player names'); return; }
+    players.push({ id: 'f' + i, name, leader, team: 'fremen' });
+  }
+
+  for (let i = 1; i <= 3; i++) {
+    const name = document.getElementById('e' + i + 'name').value.trim();
+    const leader = document.getElementById('e' + i + 'leader').value;
+    if (!name) { alert('Please fill all player names'); return; }
+    players.push({ id: 'e' + i, name, leader, team: 'emperor' });
+  }
+
+  currentGame = {
+    date: document.getElementById('gameDate').value,
+    players,
+    rounds: {}
+  };
+
+  currentRound = 1;
+  initRound(1);
+  saveCurrentGame();
+  closeNewGameModal();
+  showGameUI();
+}
+
+function initRound(round) {
+  if (!currentGame.rounds[round]) {
+    currentGame.rounds[round] = {};
+    currentGame.players.forEach(p => {
+      currentGame.rounds[round][p.id] = {
+        vp: round > 1 ? (currentGame.rounds[round - 1][p.id]?.vp || 0) : 0,
+        spice: 0,
+        solari: 0,
+        water: 0,
+        persuasion: 0,
+        conflictWon: false,
+        sardaukar: 0,
+        influence: {},
+        notes: ''
+      };
+      FACTIONS.forEach(f => {
+        currentGame.rounds[round][p.id].influence[f] =
+          round > 1 ? (currentGame.rounds[round - 1][p.id]?.influence[f] || 0) : 0;
+      });
+    });
+  }
+}
+
+// ========== GAME UI ==========
+function showGameUI() {
+  document.getElementById('gameTabs').style.display = 'flex';
+  showScreen('game');
+  renderRound();
+}
+
+function renderRound() {
+  document.getElementById('roundLabel').textContent = 'Round ' + currentRound;
+  const container = document.getElementById('playerCards');
+  const roundData = currentGame.rounds[currentRound];
+  if (!roundData) return;
+
+  container.innerHTML = currentGame.players.map(p => {
+    const d = roundData[p.id];
+    return `
+      <div class="player-card ${p.team}" id="card-${p.id}">
+        <div class="player-card-header" onclick="toggleCard('${p.id}')">
+          <div>
+            <div class="player-name">${p.name}</div>
+            <div class="player-leader">${p.leader || 'No leader'} &middot; ${p.team === 'fremen' ? 'Fremen' : 'Emperor'}</div>
+          </div>
+          <div class="player-vp">${d.vp} VP</div>
+        </div>
+        <div class="player-card-body">
+          <div class="stat-grid">
+            ${statItem('Victory Points', 'vp', d.vp, p.id, 'vp')}
+            ${statItem('Persuasion', 'persuasion', d.persuasion, p.id, 'persuasion')}
+            ${statItem('Spice', 'spice', d.spice, p.id, 'spice')}
+            ${statItem('Solari', 'solari', d.solari, p.id, 'solari')}
+            ${statItem('Water', 'water', d.water, p.id, 'water')}
+            ${statItem('Sardaukar', 'sardaukar', d.sardaukar, p.id, '')}
+          </div>
+
+          <div class="influence-section">
+            <h4>Faction Influence</h4>
+            <div class="influence-grid">
+              ${FACTIONS.map(f => `
+                <div class="influence-item">
+                  <div class="influence-name">${f}</div>
+                  <div class="stat-control">
+                    <button class="stat-btn" onclick="changeStat('${p.id}','influence.${f}',-1)">-</button>
+                    <div class="stat-value">${d.influence[f]}</div>
+                    <button class="stat-btn" onclick="changeStat('${p.id}','influence.${f}',1)">+</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="conflict-section">
+            <div class="conflict-toggle">
+              <div class="toggle ${d.conflictWon ? 'on' : ''}" onclick="toggleConflict('${p.id}')"></div>
+              <span class="conflict-label">Won Conflict This Round</span>
+            </div>
+          </div>
+
+          <div class="notes-input">
+            <textarea placeholder="Round notes..." onchange="updateNotes('${p.id}', this.value)">${d.notes || ''}</textarea>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function statItem(label, key, value, playerId, colorClass) {
+  return `
+    <div class="stat-item">
+      <div class="stat-label">${label}</div>
+      <div class="stat-control">
+        <button class="stat-btn" onclick="changeStat('${playerId}','${key}',-1)">-</button>
+        <div class="stat-value ${colorClass}">${value}</div>
+        <button class="stat-btn" onclick="changeStat('${playerId}','${key}',1)">+</button>
+      </div>
+    </div>
+  `;
+}
+
+function toggleCard(playerId) {
+  document.getElementById('card-' + playerId).classList.toggle('expanded');
+}
+
+function changeStat(playerId, stat, delta) {
+  const d = currentGame.rounds[currentRound][playerId];
+  if (stat.startsWith('influence.')) {
+    const faction = stat.split('.')[1];
+    d.influence[faction] = Math.max(0, d.influence[faction] + delta);
+  } else {
+    d[stat] = Math.max(0, (d[stat] || 0) + delta);
+  }
+  saveCurrentGame();
+  renderRound();
+}
+
+function toggleConflict(playerId) {
+  const d = currentGame.rounds[currentRound][playerId];
+  d.conflictWon = !d.conflictWon;
+  saveCurrentGame();
+  renderRound();
+}
+
+function updateNotes(playerId, value) {
+  currentGame.rounds[currentRound][playerId].notes = value;
+  saveCurrentGame();
+}
+
+function changeRound(delta) {
+  const newRound = currentRound + delta;
+  if (newRound < 1) return;
+  if (newRound > 10) return; // Dune Imperium has max ~10 rounds
+  currentRound = newRound;
+  initRound(currentRound);
+  saveCurrentGame();
+  renderRound();
+}
+
+// ========== SCOREBOARD ==========
+function renderScoreboard() {
+  if (!currentGame) return;
+  const lastRound = Math.max(...Object.keys(currentGame.rounds).map(Number));
+  const roundData = currentGame.rounds[lastRound];
+
+  const sorted = [...currentGame.players].sort((a, b) =>
+    (roundData[b.id]?.vp || 0) - (roundData[a.id]?.vp || 0)
+  );
+
+  // Team totals
+  const fremenVP = currentGame.players.filter(p => p.team === 'fremen')
+    .reduce((s, p) => s + (roundData[p.id]?.vp || 0), 0);
+  const emperorVP = currentGame.players.filter(p => p.team === 'emperor')
+    .reduce((s, p) => s + (roundData[p.id]?.vp || 0), 0);
+
+  const totalConflicts = {};
+  currentGame.players.forEach(p => {
+    totalConflicts[p.id] = Object.values(currentGame.rounds)
+      .reduce((s, r) => s + (r[p.id]?.conflictWon ? 1 : 0), 0);
+  });
+
+  document.getElementById('scoreboardContent').innerHTML = `
+    <div style="display:flex;gap:12px;margin-bottom:16px;">
+      <div style="flex:1;background:var(--fremen-bg);padding:16px;border-radius:var(--radius);text-align:center;border:1px solid var(--fremen);">
+        <div style="font-size:12px;color:var(--fremen);text-transform:uppercase;">Team Fremen</div>
+        <div style="font-size:28px;font-weight:700;color:var(--fremen);">${fremenVP} VP</div>
+      </div>
+      <div style="flex:1;background:var(--emperor-bg);padding:16px;border-radius:var(--radius);text-align:center;border:1px solid var(--emperor);">
+        <div style="font-size:12px;color:var(--emperor);text-transform:uppercase;">Team Emperor</div>
+        <div style="font-size:28px;font-weight:700;color:var(--emperor);">${emperorVP} VP</div>
+      </div>
+    </div>
+
+    <div class="leaderboard">
+      ${sorted.map((p, i) => `
+        <div class="leaderboard-row">
+          <div class="leaderboard-rank">${i + 1}</div>
+          <div style="flex:1">
+            <div class="leaderboard-name">${p.name}</div>
+            <div style="font-size:11px;color:var(--muted);">${p.leader || 'No leader'} &middot; ${totalConflicts[p.id]} conflicts won</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="player-vp" style="font-size:18px;">${roundData[p.id]?.vp || 0} VP</div>
+            <div style="font-size:11px;color:var(--muted);">R${lastRound}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// ========== END GAME ==========
+function endGame() {
+  document.getElementById('endGameModal').classList.add('active');
+}
+
+function closeEndGameModal() {
+  document.getElementById('endGameModal').classList.remove('active');
+}
+
+function confirmEndGame() {
+  const lastRound = Math.max(...Object.keys(currentGame.rounds).map(Number));
+  const roundData = currentGame.rounds[lastRound];
+
+  const summary = {
+    date: currentGame.date,
+    totalRounds: lastRound,
+    players: currentGame.players.map(p => ({
+      name: p.name,
+      leader: p.leader,
+      team: p.team,
+      vp: roundData[p.id]?.vp || 0,
+      totalConflicts: Object.values(currentGame.rounds)
+        .reduce((s, r) => s + (r[p.id]?.conflictWon ? 1 : 0), 0),
+      finalInfluence: roundData[p.id]?.influence || {}
+    })),
+    rounds: currentGame.rounds
+  };
+
+  // Determine winner
+  const topVP = Math.max(...summary.players.map(p => p.vp));
+  summary.winner = summary.players.find(p => p.vp === topVP)?.name || 'Tie';
+  summary.winningTeam = summary.players.find(p => p.vp === topVP)?.team || '';
+
+  gameHistory.unshift(summary);
+  localStorage.setItem('duneHistory', JSON.stringify(gameHistory));
+  localStorage.removeItem('duneCurrentGame');
+  localStorage.removeItem('duneCurrentRound');
+  currentGame = null;
+
+  closeEndGameModal();
+  document.getElementById('gameTabs').style.display = 'flex';
+  switchTab('history');
+}
+
+// ========== HISTORY ==========
+function renderHistory() {
+  const container = document.getElementById('historyContent');
+  if (gameHistory.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <h3>No Games Yet</h3>
+        <p>Start your first game session to begin tracking!</p>
+        <button class="btn btn-primary" style="margin-top:16px;" onclick="showNewGameModal()">+ New Game</button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = gameHistory.map((g, gi) => `
+    <div class="game-history-card">
+      <div style="display:flex;justify-content:space-between;align-items:start;">
+        <div>
+          <div class="game-date">${new Date(g.date).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</div>
+          <div class="game-winner">Winner: ${g.winner} (${g.winningTeam === 'fremen' ? 'Fremen' : 'Emperor'})</div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);">${g.totalRounds} rounds</div>
+      </div>
+      <div class="game-scores">
+        ${g.players.sort((a, b) => b.vp - a.vp).map(p => `
+          <span class="score-chip ${p.team}">${p.name}: ${p.vp}VP / ${p.totalConflicts}W</span>
+        `).join('')}
+      </div>
+      <button class="btn btn-sm btn-danger" style="margin-top:10px;" onclick="deleteGame(${gi})">Delete</button>
+    </div>
+  `).join('');
+}
+
+function deleteGame(index) {
+  if (confirm('Delete this game from history?')) {
+    gameHistory.splice(index, 1);
+    localStorage.setItem('duneHistory', JSON.stringify(gameHistory));
+    renderHistory();
+    renderStats();
+  }
+}
+
+// ========== STATS ==========
+function renderStats() {
+  const container = document.getElementById('statsContent');
+  if (gameHistory.length === 0) {
+    container.innerHTML = '<div class="empty-state"><h3>No Stats Yet</h3><p>Play some games to see stats!</p></div>';
+    return;
+  }
+
+  // Aggregate player stats
+  const playerStats = {};
+  gameHistory.forEach(g => {
+    g.players.forEach(p => {
+      if (!playerStats[p.name]) {
+        playerStats[p.name] = { games: 0, totalVP: 0, wins: 0, conflicts: 0, leaders: {} };
+      }
+      playerStats[p.name].games++;
+      playerStats[p.name].totalVP += p.vp;
+      playerStats[p.name].conflicts += p.totalConflicts;
+      if (p.name === g.winner) playerStats[p.name].wins++;
+      if (p.leader) {
+        playerStats[p.name].leaders[p.leader] = (playerStats[p.name].leaders[p.leader] || 0) + 1;
+      }
+    });
+  });
+
+  const sorted = Object.entries(playerStats).sort((a, b) => b[1].wins - a[1].wins);
+
+  container.innerHTML = `
+    <h2 style="color:var(--sand);margin-bottom:16px;font-size:16px;text-transform:uppercase;">All-Time Leaderboard</h2>
+    <div class="leaderboard">
+      ${sorted.map(([name, s], i) => {
+        const favLeader = Object.entries(s.leaders).sort((a, b) => b[1] - a[1])[0];
+        return `
+          <div class="leaderboard-row">
+            <div class="leaderboard-rank">${i + 1}</div>
+            <div style="flex:1">
+              <div class="leaderboard-name">${name}</div>
+              <div style="font-size:11px;color:var(--muted);">
+                ${s.games} games &middot; Avg ${(s.totalVP / s.games).toFixed(1)} VP &middot; ${s.conflicts} conflict wins
+                ${favLeader ? ` &middot; Fav: ${favLeader[0]}` : ''}
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:18px;font-weight:700;color:var(--gold);">${s.wins}W</div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+
+    <h2 style="color:var(--sand);margin:24px 0 16px;font-size:16px;text-transform:uppercase;">Team Record</h2>
+    <div style="display:flex;gap:12px;">
+      <div style="flex:1;background:var(--fremen-bg);padding:16px;border-radius:var(--radius);text-align:center;border:1px solid var(--fremen);">
+        <div style="font-size:12px;color:var(--fremen);text-transform:uppercase;">Team Fremen</div>
+        <div style="font-size:28px;font-weight:700;color:var(--fremen);">
+          ${gameHistory.filter(g => g.winningTeam === 'fremen').length}W
+        </div>
+      </div>
+      <div style="flex:1;background:var(--emperor-bg);padding:16px;border-radius:var(--radius);text-align:center;border:1px solid var(--emperor);">
+        <div style="font-size:12px;color:var(--emperor);text-transform:uppercase;">Team Emperor</div>
+        <div style="font-size:28px;font-weight:700;color:var(--emperor);">
+          ${gameHistory.filter(g => g.winningTeam === 'emperor').length}W
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ========== PERSISTENCE ==========
+function saveCurrentGame() {
+  localStorage.setItem('duneCurrentGame', JSON.stringify(currentGame));
+  localStorage.setItem('duneCurrentRound', currentRound.toString());
+}
+
+// ========== INIT ==========
+init();
+</script>
+</body>
+</html>
