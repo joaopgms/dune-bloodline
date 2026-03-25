@@ -78,47 +78,27 @@
       transform: rotate(45deg);
     }
 
-    /* Persuasion = blue diamond badge (rotated square with value inside) */
-    .res-icon-persuasion { display: none; } /* replaced by persuasion-diamond */
-
-    .persuasion-diamond-wrap {
+    /* Persuasion = small blue diamond icon with "1" inside, count shown outside */
+    .res-icon-persuasion {
       position: relative;
-      width: 32px;
-      height: 32px;
-      flex-shrink: 0;
-    }
-
-    .persuasion-diamond-wrap.large {
-      width: 48px;
-      height: 48px;
-    }
-
-    .persuasion-diamond {
-      position: absolute;
-      inset: 0;
       background: linear-gradient(135deg, #68c8ff 0%, #1a6aaa 100%);
-      border-radius: 5px;
+      border-radius: 3px;
       transform: rotate(45deg);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.55), inset 0 1px 2px rgba(255,255,255,0.3);
-      border: 1px solid rgba(120,200,255,0.4);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.25);
     }
-
-    .persuasion-diamond-val {
+    .res-icon-persuasion::after {
+      content: '1';
       position: absolute;
       inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
+      font-size: 9px;
       font-weight: 800;
-      font-size: 14px;
-      line-height: 1;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
-      z-index: 1;
-    }
-
-    .persuasion-diamond-wrap.large .persuasion-diamond-val {
-      font-size: 20px;
+      transform: rotate(-45deg);
+      line-height: 16px;
+      text-align: center;
     }
 
     .res-icon-sardaukar {
@@ -555,7 +535,7 @@
     }
 
     .stat-value.vp { color: var(--gold); }
-    .stat-value.persuasion { color: #5ab8f0; }
+    .stat-value.persuasion { color: #7dcfff; }
     .stat-value.spice { color: var(--spice); }
     .stat-value.solari { color: #c8c8c8; }
     .stat-value.water { color: var(--water); }
@@ -1343,7 +1323,8 @@ function renderRound() {
               <span class="quick-stat-value" style="color:var(--water)">${d.water}</span>
             </div>
             <div class="quick-stat">
-              ${persuasionDiamond(d.persuasion)}
+              ${resIcon('persuasion')}
+              <span class="quick-stat-value" style="color:#5ab8f0">${d.persuasion}</span>
             </div>
             ${d.combatStrength > 0 ? `<div class="quick-stat">${resIcon('combat')}<span class="quick-stat-value" style="color:#ff4444">${d.combatStrength}</span></div>` : ''}
             ${d.sardaukar > 0 ? `<div class="quick-stat">${resIcon('sardaukar')}<span class="quick-stat-value" style="color:#e05555">${d.sardaukar}</span></div>` : ''}
@@ -1355,14 +1336,7 @@ function renderRound() {
           <div class="section-label">Resources &amp; Points</div>
           <div class="stat-grid">
             ${statItem('Victory Points', 'vp', d.vp, p.id, 'vp', 'vp')}
-            <div class="stat-item">
-              <div class="stat-item-label">Persuasion</div>
-              <div class="stat-control" style="gap:8px;">
-                <div class="stat-btn" onclick="changeStat('${p.id}','persuasion',-1)">−</div>
-                ${persuasionDiamond(d.persuasion, true)}
-                <div class="stat-btn" onclick="changeStat('${p.id}','persuasion',1)">+</div>
-              </div>
-            </div>
+            ${statItem('Persuasion', 'persuasion', d.persuasion, p.id, 'persuasion', 'persuasion')}
             ${statItem('Spice', 'spice', d.spice, p.id, 'spice', 'spice')}
             ${statItem('Solari', 'solari', d.solari, p.id, 'solari', 'solari')}
             ${statItem('Water', 'water', d.water, p.id, 'water', 'water')}
