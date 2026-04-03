@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dune Bloodline — Card Mockup</title>
+  <style>
+    :root {
+      --bg: #121010;
+      --surface: #1e1a16;
+      --surface2: #2a2420;
+      --surface3: #353028;
+      --sand: #c4956a;
+      --gold: #e0a830;
+      --gold-dim: #8a6820;
+      --text: #f0e4cc;
+      --text-dim: #a89880;
+      --fremen: #3d9fd4;
+      --fremen-light: #5ab8f0;
+      --emperor: #c44040;
+      --green: #4db86a;
+      --spice: #f07828;
+      --solari: #e0cc3a;
+      --water: #38a8e8;
+      --guild: #9b6fc4;
+      --bene: #c46fb0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px 16px;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--gold);
+      font-size: 1.4rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      margin-bottom: 32px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Card Grid ─── */
+    .card-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ─── Card ─── */
+    .card {
+      width: 160px;
+      min-height: 240px;
+      border-radius: 10px;
+      border: 1px solid var(--gold-dim);
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      transition: transform 0.15s, box-shadow 0.15s;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 8px 32px rgba(224,168,48,0.25);
+    }
+
+    .card.fremen { border-color: var(--fremen); }
+    .card.gold   { border-color: var(--gold); }
+
+    /* ─── Card Header ─── */
+    .card-header {
+      padding: 8px 10px 6px;
+      background: var(--surface2);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .card-name {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: var(--text);
+      line-height: 1.3;
+      flex: 1;
+    }
+
+    .card.fremen .card-name { color: var(--fremen-light); }
+    .card.gold   .card-name { color: var(--gold); }
+
+    .qty-badge {
+      background: var(--surface3);
+      color: var(--text-dim);
+      font-size: 0.6rem;
+      border-radius: 4px;
+      padding: 2px 5px;
+      white-space: nowrap;
+    }
+
+    /* ─── Agent Icons Strip ─── */
+    .agent-icons {
+      display: flex;
+      gap: 4px;
+      padding: 5px 10px;
+      background: var(--surface3);
+      min-height: 28px;
+      align-items: center;
+    }
+
+    .agent-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      font-weight: 700;
+    }
+
+    .icon-fremen    { background: rgba(61,159,212,0.25); color: var(--fremen-light); border: 1px solid rgba(61,159,212,0.4); }
+    .icon-landsraad { background: rgba(224,168,48,0.2);  color: var(--gold);         border: 1px solid rgba(224,168,48,0.35); }
+    .icon-guild     { background: rgba(155,111,196,0.2); color: var(--guild);        border: 1px solid rgba(155,111,196,0.35); }
+    .icon-any       { background: rgba(240,230,204,0.1); color: var(--text);         border: 1px solid rgba(240,230,204,0.3); }
+    .icon-spice     { background: rgba(240,120,40,0.2);  color: var(--spice);        border: 1px solid rgba(240,120,40,0.35); }
+
+    .no-icons {
+      font-size: 0.58rem;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    /* ─── Card Art Area ─── */
+    .card-art {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      min-height: 60px;
+      position: relative;
+    }
+
+    .art-symbol {
+      font-size: 2.8rem;
+      opacity: 0.15;
+      user-select: none;
+    }
+
+    /* ─── Resources Row ─── */
+    .card-resources {
+      display: flex;
+      gap: 6px;
+      padding: 6px 10px;
+      justify-content: center;
+      min-height: 28px;
+      align-items: center;
+    }
+
+    .resource-pip {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .pip-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.55rem;
+    }
+
+    .pip-persuasion { background: var(--gold); color: #1a1511; }
+    .pip-sword      { background: var(--emperor); color: #fff; }
+    .pip-spice      { background: var(--spice); color: #fff; }
+
+    /* ─── Effect Box ─── */
+    .effect-box {
+      margin: 0 8px 8px;
+      border-radius: 6px;
+      background: rgba(61,159,212,0.08);
+      border: 1px solid rgba(61,159,212,0.2);
+      padding: 6px 8px;
+      font-size: 0.62rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .effect-box.agent-fx {
+      background: rgba(224,168,48,0.06);
+      border-color: rgba(224,168,48,0.2);
+    }
+
+    .effect-label {
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--fremen);
+      margin-bottom: 3px;
+    }
+
+    .effect-label.agent-lbl { color: var(--gold); }
+
+    /* ─── Flavor Text ─── */
+    .flavor-text {
+      padding: 5px 10px 8px;
+      font-size: 0.58rem;
+      font-style: italic;
+      color: var(--text-dim);
+      opacity: 0.7;
+      line-height: 1.4;
+    }
+
+    /* ─── Special: Signet ─── */
+    .signet-banner {
+      margin: 0 8px 8px;
+      border-radius: 6px;
+      background: rgba(224,168,48,0.12);
+      border: 1px solid rgba(224,168,48,0.35);
+      padding: 5px 8px;
+      font-size: 0.62rem;
+      color: var(--gold);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* ─── Section Label ─── */
+    .section-label {
+      width: 100%;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin: 24px 0 0;
+      padding-top: 16px;
+      border-top: 1px solid var(--surface3);
+    }
+  </style>
+</head>
+<body>
+
+<h1>Starter Deck</h1>
+<p class="subtitle">10 cards per player &mdash; Dune: Imperium Uprising + Bloodlines</p>
+
+<div class="card-grid" id="cardGrid"></div>
+
+<script>
+const cards = [
+  {
+    id: "convincing-argument",
+    name: "Convincing Argument",
+    quantity: 2,
+    agentIcons: [],
+    reveals: { persuasion: 1, swords: 0 },
+    agentEffect: null,
+    revealEffect: null,
+    flavorText: "Argumentation is a form of combat.",
+    cardColor: "neutral",
+    artSymbol: "◈"
+  },
+  {
+    id: "dagger",
+    name: "Dagger",
+    quantity: 2,
+    agentIcons: [],
+    reveals: { persuasion: 0, swords: 1 },
+    agentEffect: null,
+    revealEffect: null,
+    flavorText: "The first step toward survival.",
+    cardColor: "neutral",
+    artSymbol: "⚔"
+  },
+  {
+    id: "dune-the-desert-planet",
+    name: "Dune, the Desert Planet",
+    quantity: 2,
+    agentIcons: ["fremen", "spiceTrading"],
+    reveals: { persuasion: 0, swords: 0 },
+    agentEffect: "Gain 1 Spice",
+    revealEffect: "Gain 1 Spice",
+    flavorText: "Arrakis — the only source of the spice melange.",
+    cardColor: "fremen",
+    artSymbol: "🏜"
+  },
+  {
+    id: "diplomacy",
+    name: "Diplomacy",
+    quantity: 1,
+    agentIcons: ["landsraad"],
+    reveals: { persuasion: 1, swords: 0 },
+    agentEffect: null,
+    revealEffect: "You may not be targeted by opponents' Intrigue cards this round.",
+    flavorText: "In the Imperium, words are weapons.",
+    cardColor: "neutral",
+    artSymbol: "⚜"
+  },
+  {
+    id: "reconnaissance",
+    name: "Reconnaissance",
+    quantity: 1,
+    agentIcons: ["fremen"],
+    reveals: { persuasion: 0, swords: 0 },
+    agentEffect: null,
+    revealEffect: "Draw 2 cards, then put 1 card from your hand on top of your deck.",
+    flavorText: "Know your terrain before your enemy does.",
+    cardColor: "fremen",
+    artSymbol: "◎"
+  },
+  {
+    id: "seek-allies",
+    name: "Seek Allies",
+    quantity: 1,
+    agentIcons: ["landsraad", "guild"],
+    reveals: { persuasion: 1, swords: 0 },
+    agentEffect: null,
+    revealEffect: "You may pay 1 Solari to draw 1 card.",
+    flavorText: "No house stands alone.",
+    cardColor: "neutral",
+    artSymbol: "✦"
+  },
+  {
+    id: "signet-ring",
+    name: "Signet Ring",
+    quantity: 1,
+    agentIcons: ["any"],
+    reveals: { persuasion: 0, swords: 0 },
+    agentEffect: "Gain your Leader's Signet Ring ability.",
+    revealEffect: "Gain your Leader's Signet Ring ability.",
+    special: "signet",
+    flavorText: "The mark of your house — and your authority.",
+    cardColor: "gold",
+    artSymbol: "◉"
+  }
+];
+
+const iconMap = {
+  fremen:       { label: "FR", cls: "icon-fremen" },
+  spiceTrading: { label: "SP", cls: "icon-spice" },
+  landsraad:    { label: "LS", cls: "icon-landsraad" },
+  guild:        { label: "GU", cls: "icon-guild" },
+  any:          { label: "✦",  cls: "icon-any" }
+};
+
+function renderCard(card) {
+  const el = document.createElement('div');
+  el.className = `card ${card.cardColor === 'fremen' ? 'fremen' : card.cardColor === 'gold' ? 'gold' : ''}`;
+
+  // Icons strip
+  const iconsHtml = card.agentIcons.length
+    ? card.agentIcons.map(ic => {
+        const m = iconMap[ic] || { label: ic.slice(0,2).toUpperCase(), cls: 'icon-any' };
+        return `<span class="agent-icon ${m.cls}" title="${ic}">${m.label}</span>`;
+      }).join('')
+    : `<span class="no-icons">Reveal only</span>`;
+
+  // Resources
+  const resources = [];
+  if (card.reveals.persuasion > 0)
+    resources.push(`<span class="resource-pip"><span class="pip-icon pip-persuasion">◈</span> ${card.reveals.persuasion}</span>`);
+  if (card.reveals.swords > 0)
+    resources.push(`<span class="resource-pip"><span class="pip-icon pip-sword">⚔</span> ${card.reveals.swords}</span>`);
+  const resourcesHtml = resources.length
+    ? resources.join('')
+    : `<span style="font-size:0.6rem;color:var(--text-dim)">—</span>`;
+
+  // Effects
+  let effectsHtml = '';
+  if (card.agentEffect && card.agentEffect !== card.revealEffect) {
+    effectsHtml += `<div class="effect-box agent-fx"><div class="effect-label agent-lbl">Agent</div>${card.agentEffect}</div>`;
+  }
+  if (card.revealEffect) {
+    effectsHtml += `<div class="effect-box"><div class="effect-label">Reveal</div>${card.revealEffect}</div>`;
+  } else if (card.agentEffect && card.agentEffect === card.revealEffect) {
+    effectsHtml += `<div class="effect-box"><div class="effect-label">Agent + Reveal</div>${card.agentEffect}</div>`;
+  }
+
+  // Signet special
+  const signetHtml = card.special === 'signet'
+    ? `<div class="signet-banner">★ Leader Signet Ability</div>`
+    : '';
+
+  el.innerHTML = `
+    <div class="card-header">
+      <span class="card-name">${card.name}</span>
+      <span class="qty-badge">×${card.quantity}</span>
+    </div>
+    <div class="agent-icons">${iconsHtml}</div>
+    <div class="card-art"><span class="art-symbol">${card.artSymbol || '◈'}</span></div>
+    <div class="card-resources">${resourcesHtml}</div>
+    ${signetHtml}
+    ${effectsHtml}
+    <div class="flavor-text">${card.flavorText}</div>
+  `;
+
+  return el;
+}
+
+const grid = document.getElementById('cardGrid');
+cards.forEach(c => grid.appendChild(renderCard(c)));
+</script>
+</body>
+</html>

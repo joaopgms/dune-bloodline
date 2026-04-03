@@ -1,0 +1,128 @@
+{
+  "meta": {
+    "expansion": "uprising",
+    "type": "starter",
+    "description": "The 10-card starter deck each player begins with. Identical for all players."
+  },
+  "cards": [
+    {
+      "id": "convincing-argument",
+      "name": "Convincing Argument",
+      "quantity": 2,
+      "agentIcons": [],
+      "cost": 0,
+      "reveals": {
+        "persuasion": 1,
+        "swords": 0
+      },
+      "agentEffect": null,
+      "revealEffect": null,
+      "special": null,
+      "flavorText": "Argumentation is a form of combat.",
+      "faction": null,
+      "cardColor": "neutral"
+    },
+    {
+      "id": "dagger",
+      "name": "Dagger",
+      "quantity": 2,
+      "agentIcons": [],
+      "cost": 0,
+      "reveals": {
+        "persuasion": 0,
+        "swords": 1
+      },
+      "agentEffect": null,
+      "revealEffect": null,
+      "special": null,
+      "flavorText": "The first step toward survival.",
+      "faction": null,
+      "cardColor": "neutral"
+    },
+    {
+      "id": "dune-the-desert-planet",
+      "name": "Dune, the Desert Planet",
+      "quantity": 2,
+      "agentIcons": ["fremen", "spiceTrading"],
+      "cost": 0,
+      "reveals": {
+        "persuasion": 0,
+        "swords": 0
+      },
+      "agentEffect": "Gain 1 Spice",
+      "revealEffect": "Gain 1 Spice",
+      "special": null,
+      "flavorText": "Arrakis — the only source of the spice melange.",
+      "faction": "fremen",
+      "cardColor": "fremen"
+    },
+    {
+      "id": "diplomacy",
+      "name": "Diplomacy",
+      "quantity": 1,
+      "agentIcons": ["landsraad"],
+      "cost": 0,
+      "reveals": {
+        "persuasion": 1,
+        "swords": 0
+      },
+      "agentEffect": null,
+      "revealEffect": "You may not be targeted by opponents' Intrigue cards this round.",
+      "special": null,
+      "flavorText": "In the Imperium, words are weapons.",
+      "faction": null,
+      "cardColor": "neutral"
+    },
+    {
+      "id": "reconnaissance",
+      "name": "Reconnaissance",
+      "quantity": 1,
+      "agentIcons": ["fremen"],
+      "cost": 0,
+      "reveals": {
+        "persuasion": 0,
+        "swords": 0
+      },
+      "agentEffect": null,
+      "revealEffect": "Draw 2 cards, then put 1 card from your hand on top of your deck.",
+      "special": null,
+      "flavorText": "Know your terrain before your enemy does.",
+      "faction": "fremen",
+      "cardColor": "fremen"
+    },
+    {
+      "id": "seek-allies",
+      "name": "Seek Allies",
+      "quantity": 1,
+      "agentIcons": ["landsraad", "spacingGuild"],
+      "cost": 0,
+      "reveals": {
+        "persuasion": 1,
+        "swords": 0
+      },
+      "agentEffect": null,
+      "revealEffect": "You may pay 1 Solari to draw 1 card.",
+      "special": null,
+      "flavorText": "No house stands alone.",
+      "faction": null,
+      "cardColor": "neutral"
+    },
+    {
+      "id": "signet-ring",
+      "name": "Signet Ring",
+      "quantity": 1,
+      "agentIcons": ["any"],
+      "cost": 0,
+      "reveals": {
+        "persuasion": 0,
+        "swords": 0
+      },
+      "agentEffect": "Gain your Leader's Signet Ring ability.",
+      "revealEffect": "Gain your Leader's Signet Ring ability.",
+      "special": "signet",
+      "flavorText": "The mark of your house — and your authority.",
+      "faction": null,
+      "cardColor": "gold"
+    }
+  ]
+}
